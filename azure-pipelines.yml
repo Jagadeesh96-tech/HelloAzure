@@ -4,36 +4,14 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
-variables:
-  buildConfiguration: 'Release'
-
 steps:
-
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '10.x'   # because your App Service is .NET 10
+    version: '10.x'
 
-- script: dotnet restore
-  displayName: 'Restore packages'
+- script: dotnet --info
+  displayName: 'Show .NET Info'
 
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'Build solution'
-
-- script: dotnet publish -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)
-  displayName: 'Publish app'
-
-- task: PublishBuildArtifacts@1
-- task: AzureRmWebAppDeployment@5
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'nptcsaz20-1688361206259(eedf4eb4-cd45-498e-b557-69f98c72c04b)'
-    appType: 'webApp'
-    WebAppName: 'azurecicdtesting'
-    deployToSlotOrASE: true
-    ResourceGroupName: 'azurecicd'
-    SlotName: 'production'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-  inputs:
-    pathToPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: 'drop'
+- script: dotnet build
+  displayName: 'Build'
