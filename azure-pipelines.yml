@@ -5,5 +5,16 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '10.x'
+
 - script: dotnet --info
   displayName: 'Show .NET Info'
+
+- script: dotnet restore
+  displayName: 'Restore'
+
+- script: dotnet build --configuration Release
+  displayName: 'Build'
