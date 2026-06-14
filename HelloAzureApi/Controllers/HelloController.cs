@@ -9,7 +9,7 @@ namespace HelloAzureApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok("Hello World from Azure CI/CD API 🚀");
+            return Ok("Hello Jagadeesh from Azure CI/CD API 🚀");
         }
 
         [HttpGet("health")]
