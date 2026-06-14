@@ -4,17 +4,28 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
+variables:
+  buildConfiguration: 'Release'
+
 steps:
+
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
     version: '10.x'
 
-- script: dotnet --info
-  displayName: 'Show .NET Info'
-
 - script: dotnet restore
   displayName: 'Restore'
 
-- script: dotnet build --configuration Release
+- script: dotnet build --configuration $(buildConfiguration)
   displayName: 'Build'
+
+- script: dotnet publish --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)
+  displayName: 'Publish'
+
+- task: AzureWebApp@1
+  displayName: 'Deploy to Azure App Service'
+  inputs:
+    azureSubscription: 'azure-service-connection'
+    appName: 'azurecicdtesting'
+    package: '$(Build.ArtifactStagingDirectory)'
